@@ -8,34 +8,24 @@
 <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
 <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 <style>
-body {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-    padding: 20px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-.container { max-width: 1200px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); padding: 30px; margin-top: 20px; }
+body { background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); min-height: 100vh; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+.container { max-width: 1200px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 30px; margin-top: 20px; }
 .header { text-align: center; margin-bottom: 30px; color: #2c3e50; }
 .btn-generate { background: #2ecc71; color: white; border: none; padding: 12px 25px; border-radius: 5px; font-weight: 600; transition: all 0.3s; margin-top: 20px; }
 .btn-generate:hover { background: #27ae60; transform: translateY(-2px); }
 #plotContainer { margin-top: 30px; text-align: center; display: none; }
-#upsetPlot { max-width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); }
-.file-card { background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-.column-select { margin-top: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ddd; width: 100%; }
+#upsetPlot { max-width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+.file-slot { background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h1>UpSet Plot Generator</h1>
-        <p>Upload CSV/Excel files and select columns to generate UpSet plot</p>
+        <p>Upload files (leave empty to skip) and type column identifiers</p>
     </div>
 
-    <div class="mb-3">
-        <input type="file" class="form-control" id="fileInput" accept=".xlsx,.xls,.csv" multiple>
-    </div>
-
-    <div id="fileCards"></div>
+    <div id="fileSlots"></div>
 
     <div class="text-center">
         <button class="btn-generate" id="generateBtn">Generate UpSet Plot</button>
@@ -60,62 +50,67 @@ from io import BytesIO
 import base64
 import asyncio
 
-uploaded_files = []
-dfs = []  # store dataframes for column selection
+NUM_SLOTS = 10
+dfs = [None]*NUM_SLOTS
+files = [None]*NUM_SLOTS
 
-async def handle_files(event):
-    global uploaded_files, dfs
-    uploaded_files = []
-    dfs = []
-    file_cards = document.getElementById("fileCards")
-    file_cards.innerHTML = ""
+# Initialize file slots
+slot_container = document.getElementById("fileSlots")
+for i in range(NUM_SLOTS):
+    slot = document.createElement("div")
+    slot.className = "file-slot"
+    slot.innerHTML = f"""
+        <h5>Slot {i+1}</h5>
+        <input type='file' id='file-{i}' accept='.csv,.xls,.xlsx' class='form-control mb-2'>
+        <input type='text' id='col-{i}' placeholder='Column(s) identifier (e.g., A or AB)' class='form-control'>
+    """
+    slot_container.appendChild(slot)
 
-    files = event.target.files
-    for i in range(len(files)):
-        file = files.item(i)
-        uploaded_files.append(file)
-
-        # Read file into DataFrame
-        content = await file.arrayBuffer()
-        buf = BytesIO(content.to_py())
-        if file.name.endswith(".csv"):
-            df = pd.read_csv(buf)
-        else:
-            df = pd.read_excel(buf)
-        dfs.append(df)
-
-        # Create card with column select dropdown
-        card = document.createElement("div")
-        card.className = "file-card"
-        col_options = "".join([f"<option value='{col}'>{col}</option>" for col in df.columns])
-        card.innerHTML = f"""
-            <h5>{file.name}</h5>
-            <p>Size: {round(file.size/1024,2)} KB</p>
-            <label>Select column:</label>
-            <select id='col-{i}' class='column-select'>{col_options}</select>
-        """
-        file_cards.appendChild(card)
-
-async def generate_plot(event):
-    if not uploaded_files:
-        alert("Please upload files first")
+# Handle file selection
+async def handle_file_change(event):
+    id_str = event.target.id
+    idx = int(id_str.split('-')[1])
+    file = event.target.files.item(0)
+    files[idx] = file
+    if not file:
+        dfs[idx] = None
         return
+    content = await file.arrayBuffer()
+    buf = BytesIO(content.to_py())
+    if file.name.endswith('.csv'):
+        df = pd.read_csv(buf)
+    else:
+        df = pd.read_excel(buf)
+    dfs[idx] = df
 
+# Generate UpSet plot
+async def generate_plot(event):
     sets_data = {}
-    for i, df in enumerate(dfs):
-        col_select = document.getElementById(f"col-{i}")
-        col_name = col_select.value
+    for i in range(NUM_SLOTS):
+        if files[i] is None:
+            continue
+        col_input = document.getElementById(f'col-{i}')
+        col_name = col_input.value.strip()
         if not col_name:
-            alert(f"Select a column for {uploaded_files[i].name}")
-            return
-        sets_data[uploaded_files[i].name] = set(df[col_name].dropna().astype(str).tolist())
+            continue
+        # support multiple column identifiers: e.g., "AB"
+        selected_cols = list(col_name)
+        combined_set = set()
+        for c in selected_cols:
+            if c in dfs[i].columns:
+                combined_set.update(dfs[i][c].dropna().astype(str).tolist())
+        sets_data[files[i].name] = combined_set
+
+    if not sets_data:
+        alert("No valid files/columns selected")
+        return
 
     upset_data = from_contents(sets_data)
     upset = UpSet(upset_data, min_subset_size=1)
     plt.figure(figsize=(10,6))
     upset.plot()
     buf = BytesIO()
-    plt.savefig(buf, format="png", bbox_inches="tight")
+    plt.savefig(buf, format='png', bbox_inches='tight')
     plt.close()
     buf.seek(0)
     img_data = base64.b64encode(buf.read()).decode("utf-8")
@@ -123,8 +118,11 @@ async def generate_plot(event):
     img.src = f"data:image/png;base64,{img_data}"
     document.getElementById("plotContainer").style.display = "block"
 
-file_input = document.getElementById("fileInput")
-file_input.addEventListener("change", create_proxy(handle_files))
+# Attach events
+for i in range(NUM_SLOTS):
+    file_input = document.getElementById(f'file-{i}')
+    file_input.addEventListener("change", create_proxy(handle_file_change))
+
 document.getElementById("generateBtn").addEventListener("click", create_proxy(generate_plot))
 </script>
 </body>
