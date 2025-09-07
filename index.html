@@ -8,41 +8,26 @@
 <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
 <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 <style>
-body { 
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); 
-    min-height: 100vh; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-}
-.container { 
-    max-width: 1200px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 30px; margin-top: 20px; 
-}
-.header { 
-    text-align: center; margin-bottom: 30px; color: #2c3e50; 
-}
-.btn-generate { 
-    background: #2ecc71; color: white; border: none; padding: 12px 25px; border-radius: 5px; font-weight: 600; transition: all 0.3s; margin-top: 20px; 
-}
-.btn-generate:hover { 
-    background: #27ae60; transform: translateY(-2px); 
-}
-#plotContainer { 
-    margin-top: 30px; text-align: center; display: none; 
-}
-#upsetPlot { 
-    max-width: 100%; border-radius: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-}
-.file-slot { 
-    background: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 15px; 
-}
+body { background: linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%); min-height: 100vh; padding: 20px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+.container { max-width: 1200px; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); padding: 30px; margin-top: 20px; }
+.header { text-align: center; margin-bottom: 30px; color: #2c3e50; }
+.slot-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.slot-row input[type=file] { flex: 2; }
+.slot-row input[type=text] { flex: 1; }
+.btn-generate { background: #2ecc71; color:white; border:none; padding:12px 25px; border-radius:5px; font-weight:600; margin-top:20px; }
+.btn-generate:hover { background: #27ae60; }
+#plotContainer { margin-top: 30px; text-align:center; display:none; }
+#upsetPlot { max-width: 100%; border-radius: 8px; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
 </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <h1>UpSet Plot Generator</h1>
-        <p>Upload files (leave empty to skip) and type column identifiers</p>
+        <p>Upload files and select column identifiers</p>
     </div>
 
-    <div id="fileSlots" class="mb-3"></div>
+    <div id="fileSlots"></div>
 
     <div class="text-center">
         <button class="btn-generate" id="generateBtn">Generate UpSet Plot</button>
@@ -65,30 +50,25 @@ import matplotlib.pyplot as plt
 from upsetplot import UpSet, from_contents
 from io import BytesIO
 import base64
-import asyncio
 
 NUM_SLOTS = 10
 dfs = [None]*NUM_SLOTS
 files = [None]*NUM_SLOTS
 
-# Initialize file slots
+# Create rows for 10 slots
 slot_container = document.getElementById("fileSlots")
-slot_container.innerHTML = ""  # clear any existing content
-
 for i in range(NUM_SLOTS):
-    slot = document.createElement("div")
-    slot.className = "file-slot mb-3"
-    slot.innerHTML = f"""
-        <h5>Slot {i+1}</h5>
-        <input type='file' id='file-{i}' accept='.csv,.xls,.xlsx' class='form-control mb-2'>
+    row = document.createElement("div")
+    row.className = "slot-row"
+    row.innerHTML = f"""
+        <input type='file' id='file-{i}' class='form-control' accept='.csv,.xls,.xlsx'>
         <input type='text' id='col-{i}' placeholder='Column(s) identifier (e.g., A or AB)' class='form-control'>
     """
-    slot_container.appendChild(slot)
+    slot_container.appendChild(row)
 
 # Handle file selection
 async def handle_file_change(event):
-    id_str = event.target.id
-    idx = int(id_str.split('-')[1])
+    idx = int(event.target.id.split('-')[1])
     file = event.target.files.item(0)
     files[idx] = file
     if not file:
