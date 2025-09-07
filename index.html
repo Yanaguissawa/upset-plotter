@@ -4,17 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lucas Upsetploter Tool v1.0</title>
+    <!-- PyScript CSS =SUMPRODUCT(SUBTOTAL(103; OFFSET(G3:G7069; ROW(G3:G7069)-ROW(G3); 0; 1)); --(G3:G7069="YES")-->       
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css">
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+    <!-- Plotly for visualization -->
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
 </head>
 <body>
     <header>
         <h1>Lucas Upsetploter Tool</h1>
-        <h3>It will also create a excel file matrix with YES/NO for presence in each group overlap. Leave blank if not used, max 10 files per run. </h3>      
-        <h3>Notes:</h3> 
-        <h3>1 - Groups in columns, elements in rows</h3>      
-        <h3>2 - Theres also count on each row and colum so you can see the overlap size</h3>     
-        <h3>3 - For processing huge quantities of data, consider other viewing options (e.g: heatmap graph et cetera)</h3>  
-
-        <p>Select Excel files and specify columns to extract data from</p>
+        <h2>Version 1.0 - 7 Sep 2025</h2>
+        
+        <section>
+            <h3>Tool Description:</h3>
+            <p>This tool will create an Excel file matrix with YES/NO for presence in each group overlap.</p>
+            <p>Leave blank if not used (max 10 files per run).</p>
+        </section>
+        
+        <section>
+            <h3>Notes:</h3>
+            <ul>
+                <li>Groups in columns, elements in rows</li>
+                <li>Includes counts on each row and column to show overlap size</li>
+                <li>For processing huge quantities of data, consider other viewing options (e.g., heatmap graph)</li>
+            </ul>
+        </section>
     </header>
     
     <main>
@@ -22,106 +36,465 @@
             <!-- Row 1 -->
             <div>
                 <label>1. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file1">
+                <input type="file" accept=".xlsx, .xls" id="file1" name="file1">
+                <span id="fileName1">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col1">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col1" name="col1">
             </div>
             <br>
             
             <!-- Row 2 -->
             <div>
                 <label>2. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file2">
+                <input type="file" accept=".xlsx, .xls" id="file2" name="file2">
+                <span id="fileName2">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col2">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col2" name="col2">
             </div>
             <br>
             
             <!-- Row 3 -->
             <div>
                 <label>3. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file3">
+                <input type="file" accept=".xlsx, .xls" id="file3" name="file3">
+                <span id="fileName3">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col3">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col3" name="col3">
             </div>
             <br>
             
             <!-- Row 4 -->
             <div>
                 <label>4. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file4">
+                <input type="file" accept=".xlsx, .xls" id="file4" name="file4">
+                <span id="fileName4">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col4">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col4" name="col4">
             </div>
             <br>
             
             <!-- Row 5 -->
             <div>
                 <label>5. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file5">
+                <input type="file" accept=".xlsx, .xls" id="file5" name="file5">
+                <span id="fileName5">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col5">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col5" name="col5">
             </div>
             <br>
             
             <!-- Row 6 -->
             <div>
                 <label>6. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file6">
+                <input type="file" accept=".xlsx, .xls" id="file6" name="file6">
+                <span id="fileName6">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col6">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col6" name="col6">
             </div>
             <br>
             
             <!-- Row 7 -->
             <div>
                 <label>7. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file7">
+                <input type="file" accept=".xlsx, .xls" id="file7" name="file7">
+                <span id="fileName7">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col7">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col7" name="col7">
             </div>
             <br>
             
             <!-- Row 8 -->
             <div>
                 <label>8. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file8">
+                <input type="file" accept=".xlsx, .xls" id="file8" name="file8">
+                <span id="fileName8">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col8">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col8" name="col8">
             </div>
             <br>
             
             <!-- Row 9 -->
             <div>
                 <label>9. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file9">
+                <input type="file" accept=".xlsx, .xls" id="file9" name="file9">
+                <span id="fileName9">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col9">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col9" name="col9">
             </div>
             <br>
             
             <!-- Row 10 -->
             <div>
                 <label>10. Select Excel File:</label>
-                <input type="file" accept=".xlsx, .xls" id="file10">
+                <input type="file" accept=".xlsx, .xls" id="file10" name="file10">
+                <span id="fileName10">No file selected</span>
                 <label>Column Number:</label>
-                <input type="text" placeholder="e.g., 1, 2, 3" id="col10">
+                <input type="text" placeholder="e.g., 1, 2, 3" id="col10" name="col10">
             </div>
             <br>
             
             <!-- Submit Button -->
             <div>
-                <button type="submit">Generate Upset Plot</button>
-                <button type="reset">Clear All</button>
+                <button type="button" id="processButton">Generate Upset Plot</button>
+                <button type="reset" id="resetButton">Clear All</button>
             </div>
         </form>
+        
+        <section>
+            <h3>Selected Files Summary:</h3>
+            <div id="fileSummary">
+                <p>No files selected yet. Files will appear here once selected.</p>
+            </div>
+        </section>
+        
+        <section>
+            <h3>Processing Output:</h3>
+            <div id="output" style="border: 1px solid #ccc; padding: 10px; min-height: 100px;">
+                <p>Results will appear here after processing.</p>
+            </div>
+        </section>
+        
+        <section>
+            <h3>Download Results:</h3>
+            <div id="downloadSection" style="display: none;">
+                <p>Your files have been processed. Download the results:</p>
+                <button id="downloadMatrixBtn">Download Presence Matrix</button>
+                <button id="viewUpsetPlotBtn" style="margin-left: 10px;">View Upset Plot</button>
+            </div>
+        </section>
     </main>
     
     <footer>
         <p>&copy; 2025 Lucas Upsetploter Tool | Version 1.0</p>
     </footer>
+
+    <!-- PyScript Python Code -->
+    <py-script>
+        import asyncio
+        import js
+        from pyodide.http import pyfetch
+        import pandas as pd
+        from io import BytesIO
+        import numpy as np
+        from itertools import combinations
+        import json
+        
+        # Global variables to store results
+        presence_df = None
+        upset_data = None
+        
+        # Function to process the files and generate the matrix
+        async def process_files():
+            output_div = js.document.getElementById("output")
+            download_section = js.document.getElementById("downloadSection")
+            
+            output_div.innerHTML = "<p>Processing files... Please wait.</p>"
+            download_section.style.display = "none"
+            
+            try:
+                # Get all file inputs and column inputs
+                file_data = []
+                all_items = set()
+                
+                for i in range(1, 11):
+                    file_input = js.document.getElementById(f"file{i}")
+                    col_input = js.document.getElementById(f"col{i}")
+                    
+                    if file_input.files.length > 0 and col_input.value:
+                        file = file_input.files.item(0)
+                        col_num = int(col_input.value) - 1  # Convert to 0-based index
+                        
+                        # Read the Excel file
+                        output_div.innerHTML += f"<p>Reading {file.name}...</p>"
+                        
+                        # Read file content
+                        file_content = await file.arrayBuffer()
+                        file_bytes = file_content.to_bytes()
+                        
+                        # Read Excel file
+                        df = pd.read_excel(BytesIO(file_bytes))
+                        
+                        # Get the column name
+                        if col_num < len(df.columns):
+                            col_name = df.columns[col_num]
+                            items = set(df.iloc[:, col_num].dropna().astype(str).unique())
+                            all_items.update(items)
+                            
+                            file_data.append({
+                                'filename': file.name,
+                                'col_index': col_num,
+                                'col_name': col_name,
+                                'items': items
+                            })
+                            
+                            output_div.innerHTML += f"<p>Found {len(items)} unique items in {file.name}, column {col_name}</p>"
+                        else:
+                            output_div.innerHTML += f"<p style='color: red;'>Error: Column {col_num+1} does not exist in {file.name}</p>"
+                            return
+                
+                if not file_data:
+                    output_div.innerHTML += "<p style='color: red;'>No valid files and columns selected.</p>"
+                    return
+                
+                # Create the presence matrix
+                output_div.innerHTML += "<p>Creating presence matrix...</p>"
+                
+                # Convert to sorted list for consistent ordering
+                all_items = sorted(all_items)
+                
+                # Create a DataFrame for the presence matrix with YES/NO values
+                matrix_data = {}
+                for data in file_data:
+                    col_header = f"{data['filename']} - {data['col_name']}"
+                    matrix_data[col_header] = ['YES' if item in data['items'] else 'NO' for item in all_items]
+                
+                # Add the items as the first column
+                global presence_df
+                presence_df = pd.DataFrame(matrix_data, index=all_items)
+                presence_df.reset_index(inplace=True)
+                presence_df.rename(columns={'index': 'Item'}, inplace=True)
+                
+                # Add count column (count of YES values)
+                yes_no_matrix = presence_df.iloc[:, 1:].applymap(lambda x: 1 if x == 'YES' else 0)
+                presence_df['Total_Overlap'] = yes_no_matrix.sum(axis=1)
+                
+                # Prepare upset plot data
+                output_div.innerHTML += "<p>Preparing upset plot data...</p>"
+                prepare_upset_data(file_data, all_items)
+                
+                # Create Excel file with formulas
+                output_div.innerHTML += "<p>Generating Excel file with formulas...</p>"
+                
+                # Create a BytesIO object to hold the Excel file
+                excel_buffer = BytesIO()
+                
+                with pd.ExcelWriter(excel_buffer, engine='openpyxl') as writer:
+                    presence_df.to_excel(writer, sheet_name='Presence Matrix', index=False)
+                    
+                    # Get the workbook and worksheet
+                    workbook = writer.book
+                    worksheet = writer.sheets['Presence Matrix']
+                    
+                    # Add formula headers for each column
+                    for col_idx, col_name in enumerate(presence_df.columns[1:], 2):  # Start from column B
+                        if col_name != 'Total_Overlap':
+                            # Add formula to count YES values for each column
+                            formula_row = 1
+                            formula_col = col_idx
+                            formula = f'=SUMPRODUCT(SUBTOTAL(103, OFFSET({worksheet.cell(row=3, column=formula_col).coordinate}:{worksheet.cell(row=len(presence_df)+2, column=formula_col).coordinate}, ROW({worksheet.cell(row=3, column=formula_col).coordinate}:{worksheet.cell(row=len(presence_df)+2, column=formula_col).coordinate})-ROW({worksheet.cell(row=3, column=formula_col).coordinate}), 0, 1)), --({worksheet.cell(row=3, column=formula_col).coordinate}:{worksheet.cell(row=len(presence_df)+2, column=formula_col).coordinate}="YES"))'
+                            
+                            worksheet.cell(row=formula_row, column=formula_col, value=formula)
+                
+                # Prepare the file for download
+                excel_buffer.seek(0)
+                excel_data = excel_buffer.getvalue()
+                
+                # Store the Excel data in a global variable for download
+                global excel_file_data
+                excel_file_data = excel_data
+                
+                # Enable download button
+                js.document.getElementById("downloadMatrixBtn").onclick = download_matrix
+                js.document.getElementById("viewUpsetPlotBtn").onclick = show_upset_plot
+                
+                download_section.style.display = "block"
+                
+                output_div.innerHTML += f"<p style='color: green;'>Processing complete! Found {len(all_items)} unique items across {len(file_data)} files.</p>"
+                
+            except Exception as e:
+                output_div.innerHTML += f"<p style='color: red;'>Error: {str(e)}</p>"
+                js.console.error(str(e))
+        
+        # Function to prepare upset plot data
+        def prepare_upset_data(file_data, all_items):
+            # Create binary matrix for upset plot
+            binary_data = []
+            set_names = []
+            
+            for data in file_data:
+                set_name = f"{data['filename']} - {data['col_name']}"
+                set_names.append(set_name)
+                binary_data.append([1 if item in data['items'] else 0 for item in all_items])
+            
+            # Calculate intersection sizes
+            intersection_data = []
+            for r in range(1, len(set_names) + 1):
+                for combo in combinations(range(len(set_names)), r):
+                    # Calculate size of intersection
+                    mask = np.ones(len(all_items), dtype=bool)
+                    for idx in combo:
+                        mask = mask & (np.array(binary_data[idx]) == 1)
+                    
+                    intersection_size = np.sum(mask)
+                    if intersection_size > 0:
+                        intersection_data.append({
+                            'sets': [set_names[i] for i in combo],
+                            'size': int(intersection_size)
+                        })
+            
+            global upset_data
+            upset_data = {
+                'set_names': set_names,
+                'intersections': intersection_data
+            }
+        
+        # Function to download the matrix
+        def download_matrix():
+            global excel_file_data
+            blob = js.Blob.new([excel_file_data], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'})
+            url = js.URL.createObjectURL(blob)
+            
+            # Create a temporary link and trigger download
+            a = js.document.createElement('a')
+            a.href = url
+            a.download = 'upsetplot_matrix.xlsx'
+            js.document.body.appendChild(a)
+            a.click()
+            js.document.body.removeChild(a)
+            js.URL.revokeObjectURL(url)
+        
+        # Function to show the upset plot
+        def show_upset_plot():
+            global upset_data
+            
+            # Prepare data for Plotly upset plot
+            set_names = upset_data['set_names']
+            intersections = upset_data['intersections']
+            
+            # Create the upset plot in a new tab
+            plot_window = js.window.open('', '_blank')
+            plot_window.document.write(f"""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Upset Plot</title>
+                    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
+                </head>
+                <body>
+                    <div id="plot" style="width:100%; height:100vh;"></div>
+                    <script>
+                        const setNames = {json.dumps(set_names)};
+                        const intersections = {json.dumps(intersections)};
+                        
+                        // Prepare data for Plotly
+                        const intersectionSizes = intersections.map(x => x.size);
+                        const intersectionLabels = intersections.map(x => 
+                            setNames.map((name, i) => x.sets.includes(name) ? 1 : 0).join('')
+                        );
+                        
+                        // Create the upset plot
+                        const data = [{{
+                            type: 'bar',
+                            x: intersectionSizes,
+                            y: intersectionLabels,
+                            orientation: 'h',
+                            marker: {{
+                                color: 'rgba(55, 128, 191, 0.7)',
+                                line: {{
+                                    color: 'rgba(55, 128, 191, 1.0)',
+                                    width: 1
+                                }}
+                            }}
+                        }}];
+                        
+                        const layout = {{
+                            title: 'Upset Plot',
+                            xaxis: {{ title: 'Intersection Size' }},
+                            yaxis: {{ 
+                                title: 'Set Combinations',
+                                tickmode: 'array',
+                                tickvals: Array.from({{length: intersectionLabels.length}}, (_, i) => i),
+                                ticktext: intersectionLabels
+                            }},
+                            showlegend: false
+                        }};
+                        
+                        Plotly.newPlot('plot', data, layout);
+                    </script>
+                </body>
+                </html>
+            """)
+            plot_window.document.close()
+        
+        # Function to setup event listeners
+        def setup_event_listeners():
+            js.document.getElementById("processButton").addEventListener("click", lambda e: asyncio.ensure_future(process_files()))
+        
+        # Run setup when PyScript is ready
+        setup_event_listeners()
+    </py-script>
+
+    <script>
+        // Function to update file name display
+        function setupFileInputListeners() {
+            for (let i = 1; i <= 10; i++) {
+                const fileInput = document.getElementById(`file${i}`);
+                const fileNameSpan = document.getElementById(`fileName${i}`);
+                
+                fileInput.addEventListener('change', function() {
+                    if (this.files.length > 0) {
+                        fileNameSpan.textContent = this.files[0].name;
+                    } else {
+                        fileNameSpan.textContent = 'No file selected';
+                    }
+                    updateFileSummary();
+                });
+                
+                // Also update summary when column input changes
+                document.getElementById(`col${i}`).addEventListener('input', updateFileSummary);
+            }
+        }
+        
+        // Function to update the file summary section
+        function updateFileSummary() {
+            const summaryElement = document.getElementById('fileSummary');
+            let summaryHTML = '';
+            let hasFiles = false;
+            
+            for (let i = 1; i <= 10; i++) {
+                const fileInput = document.getElementById(`file${i}`);
+                const colInput = document.getElementById(`col${i}`);
+                
+                if (fileInput.files.length > 0) {
+                    hasFiles = true;
+                    summaryHTML += `<p><strong>File ${i}:</strong> ${fileInput.files[0].name}`;
+                    
+                    if (colInput.value) {
+                        summaryHTML += ` | <strong>Column:</strong> ${colInput.value}`;
+                    } else {
+                        summaryHTML += ` | <strong>Column:</strong> Not specified`;
+                    }
+                    
+                    summaryHTML += '</p>';
+                }
+            }
+            
+            if (!hasFiles) {
+                summaryHTML = '<p>No files selected yet. Files will appear here once selected.</p>';
+            }
+            
+            summaryElement.innerHTML = summaryHTML;
+        }
+        
+        // Reset all file name indicators when form is reset
+        document.getElementById('resetButton').addEventListener('click', function() {
+            for (let i = 1; i <= 10; i++) {
+                document.getElementById(`fileName${i}`).textContent = 'No file selected';
+            }
+            // Clear the summary with a slight delay to ensure form is reset first
+            setTimeout(updateFileSummary, 10);
+            
+            // Hide download section
+            document.getElementById('downloadSection').style.display = 'none';
+            
+            // Clear output
+            document.getElementById('output').innerHTML = '<p>Results will appear here after processing.</p>';
+        });
+        
+        // Initialize the file input listeners when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            setupFileInputListeners();
+        });
+    </script>
 </body>
 </html>
-
-
-
